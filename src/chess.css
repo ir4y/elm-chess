@@ -1,0 +1,46 @@
+#Chess  div {
+    width: 40px;
+    height: 40px;
+    float: left;
+    border: 1px solid #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+2) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+4) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+6) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+8) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+9) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+11) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+13) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(16n+15) {
+    background-color: #c0c0c0;
+}
+
+#Chess  div:nth-of-type(8n+1) {
+    clear: left;
+}
+
+.chessFigure {
+    font-size: 30px;
+}
