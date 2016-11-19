@@ -303,8 +303,8 @@ draggedStyle : Mouse.Position -> Html.Attribute m
 draggedStyle position =
     style
         [ "position" => "absolute"
-        , "left" => px (position.x + 10)
-        , "top" => px (position.y + 10)
+        , "left" => px (position.x + 1)
+        , "top" => px (position.y + 1)
         ]
 
 

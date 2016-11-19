@@ -11,6 +11,7 @@ type CssIds
 
 type CssClass
     = Figure
+    | OverDrop
 
 
 black =
@@ -52,5 +53,8 @@ css =
             ]
         , (.) Figure
             [ fontSize (px 30)
+            , cursor pointer
             ]
+        , (.) OverDrop
+            [ backgroundColor (hex "e3ff00") |> important ]
         ]

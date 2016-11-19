@@ -43,4 +43,9 @@
 
 .chessFigure {
     font-size: 30px;
+    cursor: pointer;
+}
+
+.chessOverDrop {
+    background-color: #e3ff00 !important;
 }

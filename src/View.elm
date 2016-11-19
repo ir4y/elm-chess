@@ -12,11 +12,3 @@ import Html.CssHelpers
 
 drawFigure figure =
     div [ class [ ChessCss.Figure ] ] [ Html.text <| Figure.figureToString figure ]
-
-
-drawCell deck position =
-    Html.div []
-        [ Figure.getFromDeck position deck
-            |> Maybe.map drawFigure
-            |> Maybe.withDefault (Html.text "")
-        ]

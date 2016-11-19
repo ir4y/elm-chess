@@ -99,8 +99,18 @@ type alias Deck =
 
 
 getFromDeck : Position -> Deck -> Maybe Figure
-getFromDeck (Position horizontalPosition verticalPositon) deck =
-    Dict.get (position horizontalPosition verticalPositon) deck
+getFromDeck (Position horizontalPosition verticalPositon) =
+    Dict.get (position horizontalPosition verticalPositon)
+
+
+insertToDeck : Position -> Figure -> Deck -> Deck
+insertToDeck (Position horizontalPosition verticalPositon) =
+    Dict.insert (position horizontalPosition verticalPositon)
+
+
+removeFromDeck : Position -> Deck -> Deck
+removeFromDeck (Position horizontalPosition verticalPositon) =
+    Dict.remove (position horizontalPosition verticalPositon)
 
 
 initDeck : Deck

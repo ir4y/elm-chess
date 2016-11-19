@@ -52,8 +52,14 @@ update msg model =
 update_ : Msg -> Model -> Model
 update_ msg model =
     case msg of
-        Dropped newPosition figure ->
-            model
+        Dropped newPosition (Figure.FigureOnDeck figure oldPosition) ->
+            { model
+                | deck =
+                    (model.deck
+                        |> Figure.removeFromDeck oldPosition
+                        |> Figure.insertToDeck newPosition figure
+                    )
+            }
 
         DnDMsg msg ->
             { model | draggable = DnD.update msg model.draggable }
@@ -83,6 +89,9 @@ view model =
              )
                 |> List.concat
             )
+        , DnD.dragged
+            model.draggable
+            (\(Figure.FigureOnDeck figure _) -> View.drawFigure figure)
         ]
 
 
@@ -94,5 +103,36 @@ draw model i j =
                     |> Maybe.map (Figure.Position horizontalPosition)
                 )
             )
-        |> Maybe.map (View.drawCell model.deck)
+        |> Maybe.map (drawCell model.deck model.draggable)
         |> Maybe.withDefault (Html.text "")
+
+
+drawCell deck draggable position =
+    draggable
+        |> DnD.getMeta
+        |> Maybe.andThen
+            (\(Figure.FigureOnDeck figure position_) ->
+                if position == position_ then
+                    Just (Html.div [] [])
+                else
+                    Nothing
+            )
+        |> Maybe.withDefault
+            (case Figure.getFromDeck position deck of
+                Just figure ->
+                    dnd.draggable (Figure.FigureOnDeck figure position) [] [ View.drawFigure figure ]
+
+                Nothing ->
+                    let
+                        isMouseOver =
+                            case DnD.atDroppable draggable of
+                                Just (Dropped position_ _) ->
+                                    position_ == position
+
+                                _ ->
+                                    False
+                    in
+                        dnd.droppable (Dropped position)
+                            [ classList [ ( ChessCss.OverDrop, isMouseOver ) ] ]
+                            []
+            )
