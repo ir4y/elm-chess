@@ -49,3 +49,11 @@
 .chessOverDrop {
     background-color: #e3ff00 !important;
 }
+
+.chessValidToDrop {
+    background-color: #48f925 !important;
+}
+
+.chessDragging {
+    opacity: 0.5;
+}

@@ -12,6 +12,8 @@ type CssIds
 type CssClass
     = Figure
     | OverDrop
+    | ValidToDrop
+    | Dragging
 
 
 black =
@@ -57,4 +59,8 @@ css =
             ]
         , (.) OverDrop
             [ backgroundColor (hex "e3ff00") |> important ]
+        , (.) ValidToDrop
+            [ backgroundColor (hex "48f925") |> important ]
+        , (.) Dragging
+            [ opacity (num 0.5) ]
         ]

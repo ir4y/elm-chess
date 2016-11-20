@@ -8,6 +8,7 @@ import Html.CssHelpers
 import DnD
 import ChessDnD exposing (draggable, droppable)
 import Msg
+import Debug
 
 
 { id, class, classList } =
@@ -27,7 +28,7 @@ view model =
                 |> List.map
                     (\i ->
                         ((List.range 1 8)
-                            |> List.map (\j -> draw model i j)
+                            |> List.map (\j -> draw model j i)
                         )
                     )
              )
@@ -51,32 +52,66 @@ draw model i j =
         |> Maybe.withDefault (Html.text "")
 
 
+extractvalidDropCell : Figure.FigureOnDeck -> List Figure.Position
+extractvalidDropCell (Figure.FigureOnDeck (Figure.Figure color type_) (Figure.Position h v)) =
+    let
+        fn =
+            if color == Figure.Black then
+                Figure.incV
+            else
+                Figure.decV
+    in
+        case type_ of
+            Figure.Pawn ->
+                [ (fn v) |> Maybe.map (Figure.Position h)
+                , (fn v) |> Maybe.andThen (fn) |> Maybe.map (Figure.Position h)
+                ]
+                    |> List.filter (\i -> i /= Nothing)
+                    |> (List.map <|
+                            Maybe.withDefault (Figure.Position Figure.A Figure.One)
+                       )
+
+            _ ->
+                []
+
+
 drawCell model position =
-    model.draggable
-        |> DnD.getMeta
-        |> Maybe.andThen
-            (\(Figure.FigureOnDeck figure position_) ->
-                if position == position_ then
-                    Just (Html.div [] [])
-                else
-                    Nothing
-            )
-        |> Maybe.withDefault
-            (case Figure.getFromDeck position model.deck of
-                Just figure ->
-                    draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ]
+    let
+        draggableFigure =
+            DnD.getMeta model.draggable
 
-                Nothing ->
-                    let
-                        isMouseOver =
-                            case DnD.atDroppable model.draggable of
-                                Just (Msg.Dropped position_ _) ->
-                                    position_ == position
+        isCurentDragging =
+            draggableFigure
+                |> Maybe.map (\(Figure.FigureOnDeck figure position_) -> position == position_)
+                |> Maybe.withDefault False
 
-                                _ ->
-                                    False
-                    in
-                        droppable (Msg.Dropped position)
-                            [ classList [ ( ChessCss.OverDrop, isMouseOver ) ] ]
-                            []
-            )
+        validDropCells =
+            draggableFigure |> Maybe.map extractvalidDropCell |> Maybe.withDefault []
+
+        validToDrop =
+            (validDropCells |> List.filter ((==) position) |> List.length) > 0
+
+        content =
+            Figure.getFromDeck position model.deck
+                |> Maybe.map (\figure -> draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ])
+                |> Maybe.withDefault (text "")
+
+        isMouseOver =
+            case DnD.atDroppable model.draggable of
+                Just (Msg.Dropped position_ _) ->
+                    position_ == position
+
+                _ ->
+                    False
+    in
+        if validToDrop then
+            droppable (Msg.Dropped position)
+                [ classList
+                    [ ( ChessCss.ValidToDrop, not isMouseOver )
+                    , ( ChessCss.OverDrop, isMouseOver )
+                    ]
+                ]
+                [ content ]
+        else
+            div [ classList [ ( ChessCss.Dragging, isCurentDragging ) ] ]
+                [ content ]

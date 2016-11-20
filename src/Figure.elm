@@ -117,91 +117,91 @@ initDeck : Deck
 initDeck =
     Dict.fromList
         [ ( position A One, Figure White Rook )
-        , ( position A Two, Figure White Knight )
-        , ( position A Three, Figure White Bishop )
-        , ( position A Four, Figure White Queen )
-        , ( position A Five, Figure White King )
-        , ( position A Six, Figure White Bishop )
-        , ( position A Seven, Figure White Knight )
-        , ( position A Eight, Figure White Rook )
-        , ( position B One, Figure White Pawn )
+        , ( position B One, Figure White Knight )
+        , ( position C One, Figure White Bishop )
+        , ( position D One, Figure White Queen )
+        , ( position E One, Figure White King )
+        , ( position F One, Figure White Bishop )
+        , ( position G One, Figure White Knight )
+        , ( position H One, Figure White Rook )
+        , ( position A Two, Figure White Pawn )
         , ( position B Two, Figure White Pawn )
-        , ( position B Three, Figure White Pawn )
-        , ( position B Four, Figure White Pawn )
-        , ( position B Five, Figure White Pawn )
-        , ( position B Six, Figure White Pawn )
-        , ( position B Seven, Figure White Pawn )
-        , ( position B Eight, Figure White Pawn )
-        , ( position H One, Figure Black Rook )
-        , ( position H Two, Figure Black Knight )
-        , ( position H Three, Figure Black Bishop )
-        , ( position H Four, Figure Black Queen )
-        , ( position H Five, Figure Black King )
-        , ( position H Six, Figure Black Bishop )
-        , ( position H Seven, Figure Black Knight )
+        , ( position C Two, Figure White Pawn )
+        , ( position D Two, Figure White Pawn )
+        , ( position E Two, Figure White Pawn )
+        , ( position F Two, Figure White Pawn )
+        , ( position G Two, Figure White Pawn )
+        , ( position H Two, Figure White Pawn )
+        , ( position A Eight, Figure Black Rook )
+        , ( position B Eight, Figure Black Knight )
+        , ( position C Eight, Figure Black Bishop )
+        , ( position D Eight, Figure Black Queen )
+        , ( position E Eight, Figure Black King )
+        , ( position F Eight, Figure Black Bishop )
+        , ( position G Eight, Figure Black Knight )
         , ( position H Eight, Figure Black Rook )
-        , ( position G One, Figure Black Pawn )
-        , ( position G Two, Figure Black Pawn )
-        , ( position G Three, Figure Black Pawn )
-        , ( position G Four, Figure Black Pawn )
-        , ( position G Five, Figure Black Pawn )
-        , ( position G Six, Figure Black Pawn )
+        , ( position A Seven, Figure Black Pawn )
+        , ( position B Seven, Figure Black Pawn )
+        , ( position C Seven, Figure Black Pawn )
+        , ( position D Seven, Figure Black Pawn )
+        , ( position E Seven, Figure Black Pawn )
+        , ( position F Seven, Figure Black Pawn )
         , ( position G Seven, Figure Black Pawn )
-        , ( position G Eight, Figure Black Pawn )
+        , ( position H Seven, Figure Black Pawn )
         ]
 
 
 verticalPositonToInt verticalPositon =
     case verticalPositon of
         One ->
-            1
+            8
 
         Two ->
-            2
-
-        Three ->
-            3
-
-        Four ->
-            4
-
-        Five ->
-            5
-
-        Six ->
-            6
-
-        Seven ->
             7
 
+        Three ->
+            6
+
+        Four ->
+            5
+
+        Five ->
+            4
+
+        Six ->
+            3
+
+        Seven ->
+            2
+
         Eight ->
-            8
+            1
 
 
 columnToVerticalPosition column =
     case column of
-        1 ->
+        8 ->
             Just One
 
-        2 ->
+        7 ->
             Just Two
 
-        3 ->
+        6 ->
             Just Three
 
-        4 ->
+        5 ->
             Just Four
 
-        5 ->
+        4 ->
             Just Five
 
-        6 ->
+        3 ->
             Just Six
 
-        7 ->
+        2 ->
             Just Seven
 
-        8 ->
+        1 ->
             Just Eight
 
         _ ->
@@ -210,28 +210,28 @@ columnToVerticalPosition column =
 
 rowToHorizontalPosition row =
     case row of
-        8 ->
+        1 ->
             Just A
 
-        7 ->
+        2 ->
             Just B
 
-        6 ->
+        3 ->
             Just C
 
-        5 ->
+        4 ->
             Just D
 
-        4 ->
+        5 ->
             Just E
 
-        3 ->
+        6 ->
             Just F
 
-        2 ->
+        7 ->
             Just G
 
-        1 ->
+        8 ->
             Just H
 
         _ ->
@@ -241,25 +241,57 @@ rowToHorizontalPosition row =
 horizontalPositionToInt horizontalPosition =
     case horizontalPosition of
         A ->
-            8
+            1
 
         B ->
-            7
-
-        C ->
-            6
-
-        D ->
-            5
-
-        E ->
-            4
-
-        F ->
-            3
-
-        G ->
             2
 
+        C ->
+            3
+
+        D ->
+            4
+
+        E ->
+            5
+
+        F ->
+            6
+
+        G ->
+            7
+
         H ->
-            1
+            8
+
+
+incH : HorizontalPosition -> Maybe HorizontalPosition
+incH horizontalPosition =
+    horizontalPosition
+        |> horizontalPositionToInt
+        |> (+) 1
+        |> rowToHorizontalPosition
+
+
+decH : HorizontalPosition -> Maybe HorizontalPosition
+decH horizontalPosition =
+    horizontalPosition
+        |> horizontalPositionToInt
+        |> (\row -> row - 1)
+        |> rowToHorizontalPosition
+
+
+incV : VerticalPosition -> Maybe VerticalPosition
+incV verticalPosition =
+    verticalPosition
+        |> verticalPositonToInt
+        |> (+) 1
+        |> columnToVerticalPosition
+
+
+decV : VerticalPosition -> Maybe VerticalPosition
+decV verticalPosition =
+    verticalPosition
+        |> verticalPositonToInt
+        |> (\column -> column - 1)
+        |> columnToVerticalPosition
