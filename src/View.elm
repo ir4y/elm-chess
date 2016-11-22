@@ -9,6 +9,7 @@ import DnD
 import ChessDnD exposing (draggable, droppable)
 import Msg
 import Debug
+import Movements
 
 
 { id, class, classList } =
@@ -52,29 +53,6 @@ draw model i j =
         |> Maybe.withDefault (Html.text "")
 
 
-extractvalidDropCell : Figure.FigureOnDeck -> List Figure.Position
-extractvalidDropCell (Figure.FigureOnDeck (Figure.Figure color type_) (Figure.Position h v)) =
-    let
-        fn =
-            if color == Figure.Black then
-                Figure.incV
-            else
-                Figure.decV
-    in
-        case type_ of
-            Figure.Pawn ->
-                [ (fn v) |> Maybe.map (Figure.Position h)
-                , (fn v) |> Maybe.andThen (fn) |> Maybe.map (Figure.Position h)
-                ]
-                    |> List.filter (\i -> i /= Nothing)
-                    |> (List.map <|
-                            Maybe.withDefault (Figure.Position Figure.A Figure.One)
-                       )
-
-            _ ->
-                []
-
-
 drawCell model position =
     let
         draggableFigure =
@@ -86,10 +64,16 @@ drawCell model position =
                 |> Maybe.withDefault False
 
         validDropCells =
-            draggableFigure |> Maybe.map extractvalidDropCell |> Maybe.withDefault []
+            draggableFigure
+                |> Maybe.map (Movements.extractvalidDropCell model.deck)
+                |> Maybe.withDefault []
 
         validToDrop =
-            (validDropCells |> List.filter ((==) position) |> List.length) > 0
+            (validDropCells
+                |> List.filter ((==) position)
+                |> List.length
+            )
+                > 0
 
         content =
             Figure.getFromDeck position model.deck
