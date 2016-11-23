@@ -38,11 +38,17 @@ blackPositions =
 
 css =
     (stylesheet << namespace "chess")
-        [ (#) Chess
+        [ div [ fontSize (px 30) ]
+        , (#) Chess
             [ descendants
                 [ div
                     ((blackPositions
-                        |> List.map (\position -> nthOfType position [ backgroundColorBlack ])
+                        |> List.map
+                            (\position ->
+                                nthOfType position
+                                    [ backgroundColorBlack
+                                    ]
+                            )
                      )
                         ++ [ width (px 40)
                            , height (px 40)
@@ -51,16 +57,19 @@ css =
                            , nthOfType "8n+1" [ property "clear" "left" ]
                            ]
                     )
+                , (.) Figure
+                    [ cursor pointer
+                    , width (px 30)
+                    , height (px 30)
+                    , border (px 0)
+                    , margin2 (px 3) (px 5)
+                    ]
+                , (.) OverDrop
+                    [ backgroundColor (hex "e3ff00") |> important ]
+                , (.) ValidToDrop
+                    [ backgroundColor (hex "48f925") |> important ]
+                , (.) Dragging
+                    [ descendants [ (.) Figure [ opacity (num 0.3) ] ] ]
                 ]
             ]
-        , (.) Figure
-            [ fontSize (px 30)
-            , cursor pointer
-            ]
-        , (.) OverDrop
-            [ backgroundColor (hex "e3ff00") |> important ]
-        , (.) ValidToDrop
-            [ backgroundColor (hex "48f925") |> important ]
-        , (.) Dragging
-            [ opacity (num 0.5) ]
         ]
