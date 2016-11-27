@@ -1,3 +1,7 @@
+div {
+    font-size: 30px;
+}
+
 #Chess  div {
     width: 40px;
     height: 40px;
@@ -41,19 +45,22 @@
     clear: left;
 }
 
-.chessFigure {
-    font-size: 30px;
+#Chess  .chessFigure {
     cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border: 0px;
+    margin: 3px 5px;
 }
 
-.chessOverDrop {
+#Chess  .chessOverDrop {
     background-color: #e3ff00 !important;
 }
 
-.chessValidToDrop {
+#Chess  .chessValidToDrop {
     background-color: #48f925 !important;
 }
 
-.chessDragging {
-    opacity: 0.5;
+#Chess  .chessDragging  .chessFigure {
+    opacity: 0.3;
 }
