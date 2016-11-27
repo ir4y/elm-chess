@@ -25,14 +25,12 @@ view model =
         [ Html.node "link" [ rel "stylesheet", href "chess.css" ] []
         , Html.div
             [ id ChessCss.Chess ]
-            (((List.range 1 8)
+            (List.range 1 8
                 |> List.map
                     (\i ->
-                        ((List.range 1 8)
+                        List.range 1 8
                             |> List.map (\j -> draw model j i)
-                        )
                     )
-             )
                 |> List.concat
             )
         , DnD.dragged
@@ -57,9 +55,13 @@ draw model i j =
 
 drawCell model position =
     let
-        content = case Figure.getFromDeck position model.deck of
-            Just figure -> draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ]
-            Nothing -> text ""
+        content =
+            case Figure.getFromDeck position model.deck of
+                Just figure ->
+                    draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ]
+
+                Nothing ->
+                    text ""
     in
         droppable (Msg.Dropped position)
             []
