@@ -29,10 +29,6 @@ type Position
     = Position HorizontalPosition VerticalPosition
 
 
-position horizontalPosition verticalPositon =
-    ( horizontalPositionToInt horizontalPosition, verticalPositonToInt verticalPositon )
-
-
 type FigureType
     = King
     | Queen
@@ -149,6 +145,10 @@ initDeck =
         , ( position G Seven, Figure Black Pawn )
         , ( position H Seven, Figure Black Pawn )
         ]
+
+
+position horizontalPosition verticalPositon =
+    ( horizontalPositionToInt horizontalPosition, verticalPositonToInt verticalPositon )
 
 
 verticalPositonToInt verticalPositon =

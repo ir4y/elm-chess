@@ -14,4 +14,8 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model model Figure.initDeck, Cmd.none )
+    ( { draggable = model
+      , deck = Figure.initDeck
+      }
+    , Cmd.none
+    )

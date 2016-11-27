@@ -42,60 +42,25 @@ view model =
 
 
 draw model i j =
-    Figure.rowToHorizontalPosition i
-        |> Maybe.andThen
-            (\horizontalPosition ->
-                (Figure.columnToVerticalPosition j
-                    |> Maybe.map (Figure.Position horizontalPosition)
-                )
-            )
-        |> Maybe.map (drawCell model)
-        |> Maybe.withDefault (Html.text "")
+    case Figure.rowToHorizontalPosition i of
+        Just hp ->
+            case Figure.columnToVerticalPosition j of
+                Just vp ->
+                    drawCell model (Figure.Position hp vp)
+
+                Nothing ->
+                    text ""
+
+        Nothing ->
+            text ""
 
 
 drawCell model position =
     let
-        draggableFigure =
-            DnD.getMeta model.draggable
-
-        isCurentDragging =
-            draggableFigure
-                |> Maybe.map (\(Figure.FigureOnDeck figure position_) -> position == position_)
-                |> Maybe.withDefault False
-
-        validDropCells =
-            draggableFigure
-                |> Maybe.map (Movements.extractvalidDropCell model.deck)
-                |> Maybe.withDefault []
-
-        validToDrop =
-            (validDropCells
-                |> List.filter ((==) position)
-                |> List.length
-            )
-                > 0
-
-        content =
-            Figure.getFromDeck position model.deck
-                |> Maybe.map (\figure -> draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ])
-                |> Maybe.withDefault (text "")
-
-        isMouseOver =
-            case DnD.atDroppable model.draggable of
-                Just (Msg.Dropped position_ _) ->
-                    position_ == position
-
-                _ ->
-                    False
+        content = case Figure.getFromDeck position model.deck of
+            Just figure -> draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ]
+            Nothing -> text ""
     in
-        if validToDrop then
-            droppable (Msg.Dropped position)
-                [ classList
-                    [ ( ChessCss.ValidToDrop, not isMouseOver )
-                    , ( ChessCss.OverDrop, isMouseOver )
-                    ]
-                ]
-                [ content ]
-        else
-            div [ classList [ ( ChessCss.Dragging, isCurentDragging ) ] ]
-                [ content ]
+        droppable (Msg.Dropped position)
+            []
+            [ content ]
