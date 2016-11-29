@@ -29,10 +29,6 @@ type Position
     = Position HorizontalPosition VerticalPosition
 
 
-position horizontalPosition verticalPositon =
-    ( horizontalPositionToInt horizontalPosition, verticalPositonToInt verticalPositon )
-
-
 type FigureType
     = King
     | Queen
@@ -55,6 +51,7 @@ type FigureOnDeck
     = FigureOnDeck Figure Position
 
 
+figureToString : Figure -> String
 figureToString figure =
     case figure of
         Figure White King ->
@@ -151,6 +148,10 @@ initDeck =
         ]
 
 
+position horizontalPosition verticalPositon =
+    ( horizontalPositionToInt horizontalPosition, verticalPositonToInt verticalPositon )
+
+
 verticalPositonToInt verticalPositon =
     case verticalPositon of
         One ->
@@ -176,6 +177,33 @@ verticalPositonToInt verticalPositon =
 
         Eight ->
             1
+
+
+horizontalPositionToInt horizontalPosition =
+    case horizontalPosition of
+        A ->
+            1
+
+        B ->
+            2
+
+        C ->
+            3
+
+        D ->
+            4
+
+        E ->
+            5
+
+        F ->
+            6
+
+        G ->
+            7
+
+        H ->
+            8
 
 
 columnToVerticalPosition column =
@@ -236,33 +264,6 @@ rowToHorizontalPosition row =
 
         _ ->
             Nothing
-
-
-horizontalPositionToInt horizontalPosition =
-    case horizontalPosition of
-        A ->
-            1
-
-        B ->
-            2
-
-        C ->
-            3
-
-        D ->
-            4
-
-        E ->
-            5
-
-        F ->
-            6
-
-        G ->
-            7
-
-        H ->
-            8
 
 
 incH : HorizontalPosition -> Maybe HorizontalPosition

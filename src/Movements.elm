@@ -12,18 +12,16 @@ extractvalidDropCell deck (Figure.FigureOnDeck (Figure.Figure color type_) posit
         _ ->
             []
     )
-        |> List.filter (\i -> i /= Nothing)
-        |> (List.map <|
-                Maybe.withDefault (Figure.Position Figure.A Figure.One)
-           )
+        |> List.foldr
+            (\maybePosition acc ->
+                case maybePosition of
+                    Just position ->
+                        position :: acc
 
-
-notingIfFilled : Figure.Deck -> Figure.Position -> Maybe Figure.Position
-notingIfFilled deck position =
-    if Figure.getFromDeck position deck == Nothing then
-        Just position
-    else
-        Nothing
+                    Nothing ->
+                        acc
+            )
+            []
 
 
 pawnValidDropCell : Figure.Deck -> Figure.FixureColor -> Figure.Position -> List (Maybe Figure.Position)
@@ -50,3 +48,11 @@ pawnValidDropCell deck color (Figure.Position h v) =
             |> Maybe.map (Figure.Position h)
             |> Maybe.andThen (notingIfFilled deck)
         ]
+
+
+notingIfFilled : Figure.Deck -> Figure.Position -> Maybe Figure.Position
+notingIfFilled deck position =
+    if Figure.getFromDeck position deck == Nothing then
+        Just position
+    else
+        Nothing

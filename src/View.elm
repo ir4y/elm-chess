@@ -25,20 +25,22 @@ view model =
         [ Html.node "link" [ rel "stylesheet", href "chess.css" ] []
         , Html.div
             [ id ChessCss.Chess ]
-            (((List.range 1 8)
-                |> List.map
+            (List.range 1 8
+                |> List.concatMap
                     (\i ->
-                        ((List.range 1 8)
+                        List.range 1 8
                             |> List.map (\j -> draw model j i)
-                        )
                     )
-             )
-                |> List.concat
             )
         , DnD.dragged
             model.draggable
             (\(Figure.FigureOnDeck figure _) -> drawFigure figure)
         ]
+
+
+
+--(>>=) = flip Maybe.andThen
+--(<$>) = flip Maybe.map
 
 
 draw model i j =
