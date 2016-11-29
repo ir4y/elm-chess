@@ -40,7 +40,7 @@ view model =
 
 
 --(>>=) = flip Maybe.andThen
---(<$>) = flip Maybe.map
+--(<$>) = Maybe.map
 
 
 draw model i j =
