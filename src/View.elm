@@ -77,11 +77,6 @@ drawCell model position =
             )
                 > 0
 
-        content =
-            Figure.getFromDeck position model.deck
-                |> Maybe.map (\figure -> draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ])
-                |> Maybe.withDefault (text "")
-
         isMouseOver =
             case DnD.atDroppable model.draggable of
                 Just (Msg.Dropped position_ _) ->
@@ -89,6 +84,11 @@ drawCell model position =
 
                 _ ->
                     False
+
+        content =
+            Figure.getFromDeck position model.deck
+                |> Maybe.map (\figure -> draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ])
+                |> Maybe.withDefault (text "")
     in
         if validToDrop then
             droppable (Msg.Dropped position)
