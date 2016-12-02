@@ -60,7 +60,7 @@ drawCell model position =
         draggableFigure =
             DnD.getMeta model.draggable
 
-        isCurentDragging =
+        isCurrentDragging =
             draggableFigure
                 |> Maybe.map (\(Figure.FigureOnDeck figure position_) -> position == position_)
                 |> Maybe.withDefault False
@@ -99,5 +99,5 @@ drawCell model position =
                 ]
                 [ content ]
         else
-            div [ classList [ ( ChessCss.Dragging, isCurentDragging ) ] ]
+            div [ classList [ ( ChessCss.Dragging, isCurrentDragging ) ] ]
                 [ content ]
