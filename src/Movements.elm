@@ -25,27 +25,21 @@ extractvalidDropCell deck (Figure.FigureOnDeck (Figure.Figure color type_) posit
 
 
 pawnValidDropCell : Figure.Deck -> Figure.FixureColor -> Figure.Position -> List (Maybe Figure.Position)
-pawnValidDropCell deck color (Figure.Position h v) =
+pawnValidDropCell deck color position =
     let
-        fn =
+        doStep =
             if color == Figure.Black then
                 Figure.incV
             else
                 Figure.decV
+
+        firstStep =
+            (doStep position)
+                |> Maybe.andThen (notingIfFilled deck)
     in
-        [ (fn v)
-            |> Maybe.map (Figure.Position h)
-            |> Maybe.andThen (notingIfFilled deck)
-        , (fn v)
-            |> Maybe.andThen
-                (\v ->
-                    if Figure.getFromDeck (Figure.Position h v) deck == Nothing then
-                        Just v
-                    else
-                        Nothing
-                )
-            |> Maybe.andThen (fn)
-            |> Maybe.map (Figure.Position h)
+        [ firstStep
+        , firstStep
+            |> Maybe.andThen doStep
             |> Maybe.andThen (notingIfFilled deck)
         ]
 

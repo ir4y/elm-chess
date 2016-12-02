@@ -96,18 +96,18 @@ type alias Deck =
 
 
 getFromDeck : Position -> Deck -> Maybe Figure
-getFromDeck (Position horizontalPosition verticalPositon) =
-    Dict.get (position horizontalPosition verticalPositon)
+getFromDeck (Position horizontalPosition verticalPosition) =
+    Dict.get (position horizontalPosition verticalPosition)
 
 
 insertToDeck : Position -> Figure -> Deck -> Deck
-insertToDeck (Position horizontalPosition verticalPositon) =
-    Dict.insert (position horizontalPosition verticalPositon)
+insertToDeck (Position horizontalPosition verticalPosition) =
+    Dict.insert (position horizontalPosition verticalPosition)
 
 
 removeFromDeck : Position -> Deck -> Deck
-removeFromDeck (Position horizontalPosition verticalPositon) =
-    Dict.remove (position horizontalPosition verticalPositon)
+removeFromDeck (Position horizontalPosition verticalPosition) =
+    Dict.remove (position horizontalPosition verticalPosition)
 
 
 initDeck : Deck
@@ -148,12 +148,12 @@ initDeck =
         ]
 
 
-position horizontalPosition verticalPositon =
-    ( horizontalPositionToInt horizontalPosition, verticalPositonToInt verticalPositon )
+position horizontalPosition verticalPosition =
+    ( horizontalPositionToInt horizontalPosition, verticalPositionToInt verticalPosition )
 
 
-verticalPositonToInt verticalPositon =
-    case verticalPositon of
+verticalPositionToInt verticalPosition =
+    case verticalPosition of
         One ->
             8
 
@@ -266,33 +266,37 @@ rowToHorizontalPosition row =
             Nothing
 
 
-incH : HorizontalPosition -> Maybe HorizontalPosition
-incH horizontalPosition =
+incH : Position -> Maybe Position
+incH (Position horizontalPosition verticalPosition) =
     horizontalPosition
         |> horizontalPositionToInt
         |> (+) 1
         |> rowToHorizontalPosition
+        |> Maybe.map (\horizontalPosition -> Position horizontalPosition verticalPosition)
 
 
-decH : HorizontalPosition -> Maybe HorizontalPosition
-decH horizontalPosition =
+decH : Position -> Maybe Position
+decH (Position horizontalPosition verticalPosition) =
     horizontalPosition
         |> horizontalPositionToInt
         |> (\row -> row - 1)
         |> rowToHorizontalPosition
+        |> Maybe.map (\horizontalPosition -> Position horizontalPosition verticalPosition)
 
 
-incV : VerticalPosition -> Maybe VerticalPosition
-incV verticalPosition =
+incV : Position -> Maybe Position
+incV (Position horizontalPosition verticalPosition) =
     verticalPosition
-        |> verticalPositonToInt
+        |> verticalPositionToInt
         |> (+) 1
         |> columnToVerticalPosition
+        |> Maybe.map (Position horizontalPosition)
 
 
-decV : VerticalPosition -> Maybe VerticalPosition
-decV verticalPosition =
+decV : Position -> Maybe Position
+decV (Position horizontalPosition verticalPosition) =
     verticalPosition
-        |> verticalPositonToInt
+        |> verticalPositionToInt
         |> (\column -> column - 1)
         |> columnToVerticalPosition
+        |> Maybe.map (Position horizontalPosition)
