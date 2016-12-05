@@ -33,14 +33,46 @@ pawnValidDropCell deck color position =
             else
                 Figure.decV
 
-        firstStep =
+        (Figure.Position hp vp) =
+            position
+
+        isFirstMovement =
+            case ( color, vp ) of
+                ( Figure.White, Figure.Two ) ->
+                    True
+
+                ( Figure.Black, Figure.Seven ) ->
+                    True
+
+                _ ->
+                    False
+
+        oneSquareStep =
             (doStep position)
-                |> Maybe.andThen (notingIfFilled deck)
+
+        twoSquareStep =
+            oneSquareStep
+                |> Maybe.andThen doStep
+
+        strikeLeft =
+            oneSquareStep
+                |> Maybe.andThen Figure.incH
+                |> Maybe.andThen (notingIfFilledByColor deck color)
+
+        strikeRight =
+            oneSquareStep
+                |> Maybe.andThen Figure.decH
+                |> Maybe.andThen (notingIfFilledByColor deck color)
     in
-        [ firstStep
-        , firstStep
-            |> Maybe.andThen doStep
+        [ oneSquareStep
             |> Maybe.andThen (notingIfFilled deck)
+        , if isFirstMovement then
+            twoSquareStep
+                |> Maybe.andThen (notingIfFilled deck)
+          else
+            Nothing
+        , strikeLeft
+        , strikeRight
         ]
 
 
@@ -50,3 +82,16 @@ notingIfFilled deck position =
         Just position
     else
         Nothing
+
+
+notingIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
+notingIfFilledByColor deck color position =
+    Figure.getFromDeck position deck
+        |> Maybe.map (\(Figure.Figure color_ _) -> color_ /= color)
+        |> Maybe.andThen
+            (\flag ->
+                if flag then
+                    Just position
+                else
+                    Nothing
+            )
