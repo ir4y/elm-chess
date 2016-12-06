@@ -57,12 +57,15 @@ pawnValidDropCell deck color position =
         strikeLeft =
             oneSquareStep
                 |> Maybe.andThen Figure.incH
-                |> Maybe.andThen (notingIfFilledByColor deck color)
+                |> Maybe.andThen (onlyIfFilledByColor deck enemyColor)
 
         strikeRight =
             oneSquareStep
                 |> Maybe.andThen Figure.decH
-                |> Maybe.andThen (notingIfFilledByColor deck color)
+                |> Maybe.andThen (onlyIfFilledByColor deck enemyColor)
+
+        enemyColor =
+            Figure.invertColor color
     in
         [ oneSquareStep
             |> Maybe.andThen (notingIfFilled deck)
@@ -86,8 +89,10 @@ notingIfFilled deck position =
 
 notingIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
 notingIfFilledByColor deck color position =
+onlyIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
+onlyIfFilledByColor deck color position =
     Figure.getFromDeck position deck
-        |> Maybe.map (\(Figure.Figure color_ _) -> color_ /= color)
+        |> Maybe.map (\(Figure.Figure color_ _) -> color_ == color)
         |> Maybe.andThen
             (\flag ->
                 if flag then

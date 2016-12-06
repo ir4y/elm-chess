@@ -43,6 +43,12 @@ type FixureColor
     | White
 
 
+invertColor : FixureColor -> FixureColor
+invertColor color =
+    case color of
+        Black -> White
+        White -> Black
+
 type Figure
     = Figure FixureColor FigureType
 
