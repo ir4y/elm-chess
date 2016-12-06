@@ -1,6 +1,6 @@
 module Movements exposing (..)
 
-import Figure
+import Figure exposing (incV, incH, decV, decH)
 
 
 extractvalidDropCell : Figure.Deck -> Figure.FigureOnDeck -> List Figure.Position
@@ -8,6 +8,9 @@ extractvalidDropCell deck (Figure.FigureOnDeck (Figure.Figure color type_) posit
     (case type_ of
         Figure.Pawn ->
             pawnValidDropCell deck color position
+
+        Figure.Knight ->
+            knightValidDropCell deck color position
 
         _ ->
             []
@@ -29,9 +32,9 @@ pawnValidDropCell deck color position =
     let
         doStep =
             if color == Figure.Black then
-                Figure.incV
+                incV
             else
-                Figure.decV
+                decV
 
         (Figure.Position hp vp) =
             position
@@ -56,12 +59,12 @@ pawnValidDropCell deck color position =
 
         strikeLeft =
             oneSquareStep
-                |> Maybe.andThen Figure.incH
+                |> Maybe.andThen incH
                 |> Maybe.andThen (onlyIfFilledByColor deck enemyColor)
 
         strikeRight =
             oneSquareStep
-                |> Maybe.andThen Figure.decH
+                |> Maybe.andThen decH
                 |> Maybe.andThen (onlyIfFilledByColor deck enemyColor)
 
         enemyColor =
@@ -79,6 +82,38 @@ pawnValidDropCell deck color position =
         ]
 
 
+knightValidDropCell : Figure.Deck -> Figure.FixureColor -> Figure.Position -> List (Maybe Figure.Position)
+knightValidDropCell deck color position =
+    let
+        incV2 =
+            Maybe.andThen incV << incV
+
+        incH2 =
+            Maybe.andThen incH << incH
+
+        decV2 =
+            Maybe.andThen decV << decV
+
+        decH2 =
+            Maybe.andThen decH << decH
+
+        checkCellValid =
+            nothingIfFilledByColor deck color
+
+        doStep =
+            (\inc1 inc2 -> position |> inc1 |> Maybe.andThen inc2 |> Maybe.andThen checkCellValid)
+    in
+        [ doStep incV2 decH
+        , doStep incV2 incH
+        , doStep decV2 decH
+        , doStep decV2 incH
+        , doStep incH2 decV
+        , doStep incH2 incV
+        , doStep decH2 decV
+        , doStep decH2 incV
+        ]
+
+
 notingIfFilled : Figure.Deck -> Figure.Position -> Maybe Figure.Position
 notingIfFilled deck position =
     if Figure.getFromDeck position deck == Nothing then
@@ -87,8 +122,6 @@ notingIfFilled deck position =
         Nothing
 
 
-notingIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
-notingIfFilledByColor deck color position =
 onlyIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
 onlyIfFilledByColor deck color position =
     Figure.getFromDeck position deck
@@ -100,3 +133,16 @@ onlyIfFilledByColor deck color position =
                 else
                     Nothing
             )
+
+
+nothingIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
+nothingIfFilledByColor deck color position =
+    case Figure.getFromDeck position deck of
+        Just (Figure.Figure color_ _) ->
+            if color_ == color then
+                Nothing
+            else
+                Just position
+
+        Nothing ->
+            Just position
