@@ -27,7 +27,7 @@ extractvalidDropCell deck (Figure.FigureOnDeck (Figure.Figure color type_) posit
             []
 
 
-pawnValidDropCell : Figure.Deck -> Figure.FixureColor -> Figure.Position -> List (Maybe Figure.Position)
+pawnValidDropCell : Figure.Deck -> Figure.FigureColor -> Figure.Position -> List (Maybe Figure.Position)
 pawnValidDropCell deck color position =
     let
         doStep =
@@ -82,7 +82,7 @@ pawnValidDropCell deck color position =
         ]
 
 
-knightValidDropCell : Figure.Deck -> Figure.FixureColor -> Figure.Position -> List (Maybe Figure.Position)
+knightValidDropCell : Figure.Deck -> Figure.FigureColor -> Figure.Position -> List (Maybe Figure.Position)
 knightValidDropCell deck color position =
     let
         incV2 =
@@ -122,7 +122,7 @@ notingIfFilled deck position =
         Nothing
 
 
-onlyIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
+onlyIfFilledByColor : Figure.Deck -> Figure.FigureColor -> Figure.Position -> Maybe Figure.Position
 onlyIfFilledByColor deck color position =
     Figure.getFromDeck position deck
         |> Maybe.map (\(Figure.Figure color_ _) -> color_ == color)
@@ -135,7 +135,7 @@ onlyIfFilledByColor deck color position =
             )
 
 
-nothingIfFilledByColor : Figure.Deck -> Figure.FixureColor -> Figure.Position -> Maybe Figure.Position
+nothingIfFilledByColor : Figure.Deck -> Figure.FigureColor -> Figure.Position -> Maybe Figure.Position
 nothingIfFilledByColor deck color position =
     case Figure.getFromDeck position deck of
         Just (Figure.Figure color_ _) ->

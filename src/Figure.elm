@@ -38,19 +38,19 @@ type FigureType
     | Pawn
 
 
-type FixureColor
+type FigureColor
     = Black
     | White
 
 
-invertColor : FixureColor -> FixureColor
+invertColor : FigureColor -> FigureColor
 invertColor color =
     case color of
         Black -> White
         White -> Black
 
 type Figure
-    = Figure FixureColor FigureType
+    = Figure FigureColor FigureType
 
 
 type FigureOnDeck
