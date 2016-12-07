@@ -12,5 +12,5 @@ main =
         { init = init
         , update = update
         , view = view
-        , subscriptions = (\model -> subscriptions model.draggable)
+        , subscriptions = subscriptions << .draggable
         }

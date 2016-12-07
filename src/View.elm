@@ -38,20 +38,11 @@ view model =
         ]
 
 
-
---(>>=) = flip Maybe.andThen
---(<$>) = Maybe.map
-
-
 draw model i j =
-    Figure.rowToHorizontalPosition i
-        |> Maybe.andThen
-            (\horizontalPosition ->
-                (Figure.columnToVerticalPosition j
-                    |> Maybe.map (Figure.Position horizontalPosition)
-                )
-            )
-        |> Maybe.map (drawCell model)
+    Maybe.map2
+        (\hp vp -> drawCell model (Figure.Position hp vp))
+        (Figure.rowToHorizontalPosition i)
+        (Figure.columnToVerticalPosition j)
         |> Maybe.withDefault (Html.text "")
 
 
@@ -62,7 +53,10 @@ drawCell model position =
 
         isCurrentDragging =
             draggableFigure
-                |> Maybe.map (\(Figure.FigureOnDeck figure position_) -> position == position_)
+                |> Maybe.map
+                    (\(Figure.FigureOnDeck figure position_) ->
+                        position == position_
+                    )
                 |> Maybe.withDefault False
 
         validDropCells =
@@ -87,7 +81,12 @@ drawCell model position =
 
         content =
             Figure.getFromDeck position model.deck
-                |> Maybe.map (\figure -> draggable (Figure.FigureOnDeck figure position) [] [ drawFigure figure ])
+                |> Maybe.map
+                    (\figure ->
+                        draggable (Figure.FigureOnDeck figure position)
+                            []
+                            [ drawFigure figure ]
+                    )
                 |> Maybe.withDefault (text "")
     in
         if validToDrop then
