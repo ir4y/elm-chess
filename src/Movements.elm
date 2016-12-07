@@ -12,6 +12,9 @@ extractvalidDropCell deck (Figure.FigureOnDeck (Figure.Figure color type_) posit
         Figure.Knight ->
             knightValidDropCell deck color position
 
+        Figure.King ->
+            kingValidDropCell deck color position
+
         _ ->
             []
     )
@@ -111,6 +114,23 @@ knightValidDropCell deck color position =
         , doStep incH2 incV
         , doStep decH2 decV
         , doStep decH2 incV
+        ]
+
+
+kingValidDropCell : Figure.Deck -> Figure.FigureColor -> Figure.Position -> List (Maybe Figure.Position)
+kingValidDropCell deck color position =
+    let
+        checkCellValid =
+            Maybe.andThen <| nothingIfFilledByColor deck color
+    in
+        [ position |> incH |> checkCellValid
+        , position |> incV |> checkCellValid
+        , position |> decH |> checkCellValid
+        , position |> decV |> checkCellValid
+        , position |> incV |> Maybe.andThen incH |> checkCellValid
+        , position |> incV |> Maybe.andThen decH |> checkCellValid
+        , position |> decV |> Maybe.andThen incH |> checkCellValid
+        , position |> decV |> Maybe.andThen decH |> checkCellValid
         ]
 
 
