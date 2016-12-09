@@ -15,8 +15,14 @@ extractvalidDropCell deck (Figure.FigureOnDeck (Figure.Figure color type_) posit
         Figure.King ->
             kingValidDropCell deck color position
 
-        _ ->
-            []
+        Figure.Rook ->
+            rookValidDropCell deck color position
+
+        Figure.Bishop ->
+            bishopValidDropCell deck color position
+
+        Figure.Queen ->
+            (rookValidDropCell deck color position) ++ (bishopValidDropCell deck color position)
     )
         |> List.foldr
             (\maybePosition acc ->
@@ -132,6 +138,68 @@ kingValidDropCell deck color position =
         , position |> decV |> Maybe.andThen incH |> checkCellValid
         , position |> decV |> Maybe.andThen decH |> checkCellValid
         ]
+
+
+rookValidDropCell : Figure.Deck -> Figure.FigureColor -> Figure.Position -> List (Maybe Figure.Position)
+rookValidDropCell deck color position =
+    let
+        walk fn position =
+            let
+                maybeNewPosition =
+                    fn position
+                        |> Maybe.andThen (nothingIfFilledByColor deck color)
+
+                cellHasEnemy =
+                    onlyIfFilledByColor deck (Figure.invertColor color) >> ((/=) Nothing)
+            in
+                case maybeNewPosition of
+                    Nothing ->
+                        []
+
+                    Just newPosition ->
+                        if cellHasEnemy newPosition then
+                            [ newPosition ]
+                        else
+                            newPosition :: (walk fn newPosition)
+    in
+        List.concat
+            [ position |> walk incH
+            , position |> walk decH
+            , position |> walk incV
+            , position |> walk decV
+            ]
+            |> List.map Just
+
+
+bishopValidDropCell : Figure.Deck -> Figure.FigureColor -> Figure.Position -> List (Maybe Figure.Position)
+bishopValidDropCell deck color position =
+    let
+        walk fn position =
+            let
+                maybeNewPosition =
+                    fn position
+                        |> Maybe.andThen (nothingIfFilledByColor deck color)
+
+                cellHasEnemy =
+                    onlyIfFilledByColor deck (Figure.invertColor color) >> ((/=) Nothing)
+            in
+                case maybeNewPosition of
+                    Nothing ->
+                        []
+
+                    Just newPosition ->
+                        if cellHasEnemy newPosition then
+                            [ newPosition ]
+                        else
+                            newPosition :: (walk fn newPosition)
+    in
+        List.concat
+            [ position |> walk (incH >> Maybe.andThen incV)
+            , position |> walk (decH >> Maybe.andThen decV)
+            , position |> walk (incH >> Maybe.andThen decV)
+            , position |> walk (decH >> Maybe.andThen incV)
+            ]
+            |> List.map Just
 
 
 notingIfFilled : Figure.Deck -> Figure.Position -> Maybe Figure.Position
