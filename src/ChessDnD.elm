@@ -5,4 +5,4 @@ import Msg
 
 
 { model, subscriptions, draggable, droppable } =
-    DnD.init Msg.DnDMsg
+    DnD.init Msg.DnDMsg Msg.Dropped

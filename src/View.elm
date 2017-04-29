@@ -49,7 +49,7 @@ draw model i j =
 drawCell model position =
     let
         draggableFigure =
-            DnD.getMeta model.draggable
+            DnD.getDragMeta model.draggable
 
         isCurrentDragging =
             draggableFigure
@@ -72,8 +72,8 @@ drawCell model position =
                 > 0
 
         isMouseOver =
-            case DnD.atDroppable model.draggable of
-                Just (Msg.Dropped position_ _) ->
+            case DnD.getDropMeta model.draggable of
+                Just position_ ->
                     position_ == position
 
                 _ ->
@@ -90,7 +90,7 @@ drawCell model position =
                 |> Maybe.withDefault (text "")
     in
         if validToDrop then
-            droppable (Msg.Dropped position)
+            droppable position
                 [ classList
                     [ ( ChessCss.ValidToDrop, not isMouseOver )
                     , ( ChessCss.OverDrop, isMouseOver )

@@ -7,7 +7,7 @@ import ChessDnD exposing (model)
 
 
 type alias Model =
-    { draggable : DnD.Draggable Figure.FigureOnDeck Msg
+    { draggable : DnD.Draggable Figure.Position Figure.FigureOnDeck
     , deck : Figure.Deck
     }
 
