@@ -39,7 +39,7 @@ blackPositions =
 css =
     (stylesheet << namespace "chess")
         [ div [ fontSize (px 30) ]
-        , (#) Chess
+        , id Chess
             [ descendants
                 [ div
                     ((blackPositions
@@ -57,19 +57,19 @@ css =
                            , nthOfType "8n+1" [ property "clear" "left" ]
                            ]
                     )
-                , (.) Figure
+                , class Figure
                     [ cursor pointer
                     , width (px 30)
                     , height (px 30)
                     , border (px 0)
                     , margin2 (px 3) (px 5)
                     ]
-                , (.) OverDrop
+                , class OverDrop
                     [ backgroundColor (hex "e3ff00") |> important ]
-                , (.) ValidToDrop
+                , class ValidToDrop
                     [ backgroundColor (hex "48f925") |> important ]
-                , (.) Dragging
-                    [ descendants [ (.) Figure [ opacity (num 0.3) ] ] ]
+                , class Dragging
+                    [ descendants [ class Figure [ opacity (num 0.3) ] ] ]
                 ]
             ]
         ]

@@ -16,7 +16,7 @@ cssFiles =
         ]
 
 
-main : Program Never () msg
+main : CssCompilerProgram
 main =
     Platform.program
         { init = ( (), files cssFiles )
