@@ -18,8 +18,4 @@ cssFiles =
 
 main : CssCompilerProgram
 main =
-    Platform.program
-        { init = ( (), files cssFiles )
-        , update = \_ _ -> ( (), Cmd.none )
-        , subscriptions = \_ -> Sub.none
-        }
+    Css.File.compiler files cssFiles
