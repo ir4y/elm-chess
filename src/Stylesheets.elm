@@ -12,7 +12,7 @@ port files : CssFileStructure -> Cmd msg
 cssFiles : CssFileStructure
 cssFiles =
     toFileStructure
-        [ ( "chess.css", compile [ ChessCss.css ] )
+        [ ( "src/chess.css", compile [ ChessCss.css ] )
         ]
 
 
