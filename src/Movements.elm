@@ -138,6 +138,15 @@ kingValidDropCell deck color position =
         , position |> decV |> Maybe.andThen incH |> checkCellValid
         , position |> decV |> Maybe.andThen decH |> checkCellValid
         ]
+            ++ if
+                (position == Figure.Position Figure.E Figure.One && color == Figure.White)
+                    || (position == Figure.Position Figure.E Figure.Eight && color == Figure.Black)
+               then
+                [ position |> incH |> checkCellValid |> Maybe.andThen incH |> checkCellValid
+                , position |> decH |> checkCellValid |> Maybe.andThen decH |> checkCellValid |> Maybe.andThen decH |> checkCellValid
+                ]
+               else
+                []
 
 
 rookValidDropCell : Figure.Deck -> Figure.FigureColor -> Figure.Position -> List (Maybe Figure.Position)
